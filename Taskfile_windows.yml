@@ -62,6 +62,3 @@ tasks:
       - "{{.LOAD_ENVS_CMD}}"
       - go mod init "{{.PROJECT_NAME}}"
       - go mod download
-      - git init
-      - git add -A
-      - git commit -m "Initial commit"

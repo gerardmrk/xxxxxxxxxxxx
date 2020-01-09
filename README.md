@@ -25,7 +25,7 @@ Your task file is:
 - `Taskfile.yml` for MacOS and Debian-based distros.
 - `Taskfile_windows.yml` for Windows (**_TODO_**).
 
-Then run the following to setup git, among other stuff:
+Then run the following to setup the workspace (currently just init-ing go modules):
 
 ```bash
 task init
