@@ -1,20 +1,65 @@
 version: "2"
 
 vars:
-  DKRC: docker-compose -f ./docker-compose.yml
+  # name of the project to interpolate in various config files.
+  PROJECT_NAME: azerbaijan
+  # docker volume for the DB container.
+  DKRV_DB: "/usr/local/var/{{.PROJECT_NAME}}-db"
+  # docker compose command.
+  DKRC_CMD: docker-compose -f ./build/docker-compose.yml
 
 tasks:
+  # init initialises the workspace. This is safe to run multiple times if you're
+  # not particular about git commit ethics. Otherwise don't run it twice.
+  init:
+    cmds:
+      - task: load-envs
+      - go mod init "{{.PROJECT_NAME}}"
+      - go mod download
+      - git init
+      - git add -A
+      - git commit -m "Initial commit"
+      - task: unload-envs
+
+  # start loads all env vars defined in `.env`,
+  # then runs all containers defined in `build/docker-compose.yml`.
   start:
     cmds:
-      - task: load_env
-      - "{{.DKRC}} up --build"
+      - task: load-envs
+      - "{{.DKRC_CMD}} up --build"
 
-  # Export all custom environment variables defined in `.env`.
-  load_env:
+  # start-bg is like `start`, but runs all containers in background mode. This
+  # is useful if you want to reuse the same terminal for other commands. In
+  # order to view logs from containers running in this mode, run `logs`.
+  start-bg:
+    cmd:
+      - task: load-envs
+      - "{{.DKRC_CMD}} up -d --build"
+
+  # stop-bg stops all containers ran from calling `start-bg`, and unsets all
+  # previously-loaded env-vars as defined in `.env`.
+  stop-bg:
     cmds:
+      - "{{.DKRC_CMD}} stop"
+      - task: unload-envs
+
+  purge:
+    cmds:
+      - "{{.DKRC_CMD}} rm --force --stop -v"
+      - rm -rf "{{.DKRV_DB}}"
+      - task: unload-envs
+
+  # load-envs exports all custom env vars defined in `.env`, and additional
+  # environment variables defined in vars.
+  load-envs:
+    cmds:
+      - export PROJECT_NAME="{{.PROJECT_NAME}}"
+      - export DOCKER_DB_VOLUME="{{.DKRV_DB}}"
       - export $(grep -v '^#' .env | xargs)
 
-  # Unset all custom environment variables defined in `.env`.
-  unload_env:
+  # unload-envs unsets all env vars that was exported from running `load-envs`.
+  unload-envs:
     cmds:
+      - unset PROJECT_NAME
+      - unset DOCKER_DB_VOLUME
       - unset $(grep -v '^#' .env | cut -d '=' -f 1 | xargs)

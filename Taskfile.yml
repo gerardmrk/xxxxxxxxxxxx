@@ -2,18 +2,23 @@ version: "2"
 
 vars:
   # name of the project to interpolate in various config files.
-  PROJECT_NAME: istanbul
+  PROJECT_NAME: azerbaijan
   # docker volume for the DB container.
   DKRV_DB: "/usr/local/var/{{.PROJECT_NAME}}-db"
   # docker compose command.
   DKRC_CMD: docker-compose -f ./build/docker-compose.yml
 
 tasks:
+  # init initialises the workspace. This is safe to run multiple times if you're
+  # not particular about git commit ethics. Otherwise don't run it twice.
   init:
     cmds:
       - task: load-envs
       - go mod init "{{.PROJECT_NAME}}"
       - go mod download
+      - git init
+      - git add -A
+      - git commit -m "Initial commit"
       - task: unload-envs
 
   # start loads all env vars defined in `.env`,
