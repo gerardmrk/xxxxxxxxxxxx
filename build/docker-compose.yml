@@ -16,3 +16,15 @@ services:
       POSTGRES_DB: "${WEBSVC_DB_NAME}"
       POSTGRES_USER: "${WEBSVC_DB_USER}"
       POSTGRES_PASSWORD: "${WEBSVC_DB_PASS}"
+
+  server:
+    container_name: "${PROJECT_NAME}-srv"
+    build:
+      context: ../
+      dockerfile: build/server/Dockerfile
+    depends_on:
+      - database
+    ports:
+      - "${WEBSVC_SRV_PORT}:${WEBSVC_SRV_PORT}/tcp"
+    volumes:
+      - "../:/app"
