@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  database:
+    container_name: "${PROJECT_NAME}-db"
+    command: postgres -c logging_collector=on -c log_connections=on -c log_line_prefix='%a %u %r %t'
+    build:
+      context: ../
+      dockerfile: build/database/Dockerfile
+    ports:
+      - "${WEBSVC_DB_PORT}:${WEBSVC_DB_PORT}/tcp"
+    volumes:
+      - "./build/database/init:/docker-entrypoint-initdb.d"
+      - "${DOCKER_DB_VOLUME}:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: "${WEBSVC_DB_NAME}"
+      POSTGRES_USER: "${WEBSVC_DB_USER}"
+      POSTGRES_PASSWORD: "${WEBSVC_DB_PASS}"

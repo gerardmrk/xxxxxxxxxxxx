@@ -1,0 +1,20 @@
+version: "2"
+
+vars:
+  DKRC: docker-compose -f ./docker-compose.yml
+
+tasks:
+  start:
+    cmds:
+      - task: load_env
+      - "{{.DKRC}} up --build"
+
+  # Export all custom environment variables defined in `.env`.
+  load_env:
+    cmds:
+      - export $(grep -v '^#' .env | xargs)
+
+  # Unset all custom environment variables defined in `.env`.
+  unload_env:
+    cmds:
+      - unset $(grep -v '^#' .env | cut -d '=' -f 1 | xargs)
