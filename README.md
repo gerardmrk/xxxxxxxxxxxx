@@ -1,4 +1,16 @@
-# Go + PG Boilerplate
+# xxxxxxxxxxxx
+
+**STATUS**: `INCOMPLETE BUT USABLE`
+
+For internal usage, made public for John and Anjali.
+
+This is a boilerplate to get you up and running whenever you want to follow along a Udemy course or a Medium article tutorial (ugh) etc for the following technology:
+
+**Postgres** as your database,
+a barebones **Golang** web server as your backend,
+and a **React.js** app (TODO) as your frontend.
+
+Happy learning.
 
 ## Requirements
 
