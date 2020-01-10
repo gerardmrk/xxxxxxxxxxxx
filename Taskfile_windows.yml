@@ -3,8 +3,10 @@ version: "2"
 silent: true
 
 vars:
-  # name of the project to interpolate in various config files.
-  PROJECT_NAME: azerbaijan
+  # <REPLACE HERE> name of the project to interpolate in various config files.
+  PROJECT_NAME: georgia
+  # INTERNAL USAGE.
+  PLACEHOLDER: xxxxxxxxxxxx
   # docker volume for the DB container.
   DOCKER_DB_VOLUME: /usr/local/var/{{.PROJECT_NAME}}-db
   # docker compose command.
@@ -60,5 +62,5 @@ tasks:
   init:
     cmds:
       - "{{.LOAD_ENVS_CMD}}"
-      - go mod init "{{.PROJECT_NAME}}"
+      - sed -i '' 's/{{.PLACEHOLDER}}/{{.PROJECT_NAME}}/g' go.mod
       - go mod download

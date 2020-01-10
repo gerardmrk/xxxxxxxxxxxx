@@ -22,7 +22,8 @@ Change the value of `vars.PROJECT_NAME` in your **Taskfile**.
 
 Your task file is:
 
-- `Taskfile.yml` for MacOS and Debian-based distros.
+- `Taskfile.yml` for MacOS.
+- `Taskfile_linux.yml` for Linux (Debian-based distros only).
 - `Taskfile_windows.yml` for Windows (**_TODO_**).
 
 Then run the following to setup the workspace (currently just init-ing go modules):

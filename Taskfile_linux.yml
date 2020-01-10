@@ -62,5 +62,5 @@ tasks:
   init:
     cmds:
       - "{{.LOAD_ENVS_CMD}}"
-      - sed -i '' 's/{{.PLACEHOLDER}}/{{.PROJECT_NAME}}/g' go.mod
+      - sed -i 's/{{.PLACEHOLDER}}/{{.PROJECT_NAME}}/g' go.mod
       - go mod download
